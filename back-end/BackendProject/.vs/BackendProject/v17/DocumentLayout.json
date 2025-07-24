@@ -1,12 +1,53 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\pph\\Downloads\\Project\\back-end\\BackendProject\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|c:\\users\\pph\\downloads\\internshipproject\\back-end\\backendproject\\backendproject\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|c:\\users\\pph\\downloads\\internshipproject\\back-end\\backendproject\\backendproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "BackendProject\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Controllers\\UserController.cs",
+              "RelativeToolTip": "BackendProject\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T08:43:09.214Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\User.cs",
+              "RelativeDocumentMoniker": "BackendProject\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\User.cs",
+              "RelativeToolTip": "BackendProject\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T08:17:48.163Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

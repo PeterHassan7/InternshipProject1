@@ -1,0 +1,180 @@
+:root {
+  --gray-rgb: 0, 0, 0;
+  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
+  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
+
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gray-rgb: 255, 255, 255;
+    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
+    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
+
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+  }
+}
+
+.page {
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  align-items: center;
+  justify-items: center;
+  min-height: 100svh;
+  padding: 80px;
+  gap: 64px;
+  font-family: var(--font-geist-sans);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  grid-row-start: 2;
+}
+
+.togglecontainer {
+  display: flex;
+  gap: 8px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 6px;
+  padding: 4px;
+  background: var(--gray-alpha-100);
+  max-width: 300px;
+  width: 100%;
+  justify-content: center;
+}
+
+.togglebutton {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: inherit;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.togglebutton:hover {
+  background: var(--gray-alpha-200);
+}
+
+.togglebutton:disabled {
+  background: var(--foreground);
+  color: var(--background);
+  cursor: default;
+}
+
+.input {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 6px;
+  background: var(--gray-alpha-100);
+  font-size: 16px;
+  color: inherit;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--button-primary-hover);
+}
+
+.passbox {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 12px;
+}
+
+.passbutton {
+  position: absolute;
+  top: 20%;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.passbutton:hover {
+  color: var(--foreground);
+}
+
+.passbutton:focus {
+  outline: 2px solid var(--button-primary-hover);
+  outline-offset: 2px;
+}
+
+.passview {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  display: block;
+}
+
+
+.error {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.capswarning {
+  font-size: 0.85rem;
+  user-select: none;
+  margin-bottom: 16px;
+}
+
+.button {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 8px; /* space above button */
+}
+
+.button:hover {
+  background: var(--button-primary-hover);
+}
+
+@media (max-width: 400px) {
+  .page {
+    padding: 32px;
+    padding-bottom: 80px;
+  }
+
+  .main {
+    align-items: center;
+  }
+
+  .togglecontainer {
+    flex-direction: row;
+    gap: 0.3rem;
+  }
+  .togglebutton {
+    font-size: 0.9rem;
+    padding: 0.25em 0.5em;
+  }
+}
