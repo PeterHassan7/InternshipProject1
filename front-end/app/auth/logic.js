@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 export const validate = (username, password, secondpassword, isLogin) => {
   const newErrors = {};
   if (!username.trim()) newErrors.username = "Username is required";
@@ -45,9 +47,9 @@ export const handleSubmit = async ({
     const text = await res.text();
 
     if (!res.ok) {
-      alert(text);
+      toast.error(text);
     } else {
-      alert(text);
+      toast.success(text);
     }
   } catch (error) {
     alert("Network error. Please try again.");

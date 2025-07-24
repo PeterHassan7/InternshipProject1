@@ -1,10 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import styling from "./page.module.css";
 import { handleSubmit, handleCapsKey } from "./logic";
+import { Toaster } from "react-hot-toast";
 
-export default function LoginPage() {
+export default function AuthPage() {
+  const searchParams = useSearchParams();
+const router = useRouter();
+
+const modeFromUrl = searchParams.get("mode") || "login";
+
+const isLogin = modeFromUrl === "login";
+
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secondpassword, setSecondpassword] = useState("");
@@ -12,20 +22,28 @@ export default function LoginPage() {
   const [showpass2, setShowpass2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [capslockon, setCapsLockon] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
   const [errors, setErrors] = useState({});
+
+
+  function toggleMode(newMode) {
+  router.replace(`/auth?mode=${newMode}`, undefined, { shallow: true });
+  setSecondpassword("");
+  setErrors({});
+}
+
 
   return (
     <div className={styling.page}>
       <main className={styling.main}>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{ style: { background: "black", color: "white" } }}
+        />
         <div className={styling.togglecontainer}>
           <button
             type="button"
-            onClick={() => {
-              setIsLogin(true);
-              setSecondpassword("");
-              setErrors({});
-            }}
+            onClick={() => toggleMode("login")}
             disabled={isLogin}
             className={styling.togglebutton}
           >
@@ -33,11 +51,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={() => {
-              setIsLogin(false);
-              setSecondpassword("");
-              setErrors({});
-            }}
+            onClick={() => toggleMode("register")}
             disabled={!isLogin}
             className={styling.togglebutton}
           >
@@ -66,7 +80,6 @@ export default function LoginPage() {
             onChange={(e) => setUsername(e.target.value)}
             className={styling.input}
             disabled={loading}
-            aria-invalid={errors.username ? "true" : "false"}
           />
           {errors.username && <div className={styling.error}>{errors.username}</div>}
 
@@ -80,7 +93,6 @@ export default function LoginPage() {
               onKeyUp={(e) => handleCapsKey(e, setCapsLockon)}
               className={styling.input}
               disabled={loading}
-              aria-invalid={errors.password ? "true" : "false"}
             />
             <button
               type="button"
@@ -110,7 +122,6 @@ export default function LoginPage() {
                   onKeyUp={(e) => handleCapsKey(e, setCapsLockon)}
                   className={styling.input}
                   disabled={loading}
-                  aria-invalid={errors.secondpassword ? "true" : "false"}
                 />
                 <button
                   type="button"
@@ -133,19 +144,11 @@ export default function LoginPage() {
           )}
 
           {capslockon && (
-            <div className={styling.capswarning}>
-              ⚠️ Warning: Caps Lock is ON
-            </div>
+            <div className={styling.capswarning}>⚠️ Warning: Caps Lock is ON</div>
           )}
 
           <button type="submit" className={styling.button} disabled={loading}>
-            {loading
-              ? isLogin
-                ? "Logging in…"
-                : "Signing up…"
-              : isLogin
-              ? "Login"
-              : "Sign Up"}
+            {loading ? (isLogin ? "Logging in…" : "Signing up…") : isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
       </main>

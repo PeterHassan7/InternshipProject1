@@ -152,7 +152,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
-  margin-top: 8px; /* space above button */
+  margin-top: 8px;
 }
 
 .button:hover {
