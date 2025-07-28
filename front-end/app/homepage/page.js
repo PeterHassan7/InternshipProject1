@@ -24,7 +24,6 @@ export default function Homepage() {
   }, []);
 
   useEffect(() => {
-    // Close dropdown if clicking outside
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
@@ -53,7 +52,7 @@ export default function Homepage() {
         )}
       </div>
 
-      {/* Your homepage content below */}
+      {}
     </div>
   );
 }

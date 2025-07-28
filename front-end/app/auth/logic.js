@@ -44,12 +44,11 @@ export const handleSubmit = async ({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: isLogin
-        ? JSON.stringify({ username, password, RememberMe: rememberMe }) // Note casing here
+        ? JSON.stringify({ username, password, RememberMe: rememberMe })
         : JSON.stringify({ username, password }),
     });
 
     const raw= await res.text();
-    // Try parse JSON, fallback to text if it fails
     let data;
     try {
       data = JSON.parse(raw);
@@ -58,7 +57,6 @@ export const handleSubmit = async ({
     }
 
     if (!res.ok) {
-      // Show backend error message or generic fallback
       const errorMessage =
         typeof data === "string"
           ? data
@@ -68,7 +66,6 @@ export const handleSubmit = async ({
       return;
     }
 
-    // Success
     toast.success(isLogin ? "Login successful!" : "Signup Successful");
 
     localStorage.removeItem("token");
