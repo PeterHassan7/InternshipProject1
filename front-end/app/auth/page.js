@@ -8,11 +8,9 @@ import { Toaster } from "react-hot-toast";
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
-const router = useRouter();
-
-const modeFromUrl = searchParams.get("mode") || "login";
-
-const isLogin = modeFromUrl === "login";
+  const router = useRouter();
+  const modeFromUrl = searchParams.get("mode") || "login";
+  const isLogin = modeFromUrl === "login";
 
 
   const [username, setUsername] = useState("");
@@ -23,6 +21,7 @@ const isLogin = modeFromUrl === "login";
   const [loading, setLoading] = useState(false);
   const [capslockon, setCapsLockon] = useState(false);
   const [errors, setErrors] = useState({});
+  const [rememberMe , setrememberMe] = useState(false);
 
 
   function toggleMode(newMode) {
@@ -69,6 +68,8 @@ const isLogin = modeFromUrl === "login";
               isLogin,
               setErrors,
               setLoading,
+              rememberMe,
+              router,
             })
           }
           noValidate
@@ -109,7 +110,18 @@ const isLogin = modeFromUrl === "login";
             </button>
           </div>
           {errors.password && <div className={styling.error}>{errors.password}</div>}
-
+          {isLogin && (
+            <div className={styling.rememberme}>
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setrememberMe(e.target.checked)}
+                disabled={loading}
+                />
+                <label htmlFor="rememberMe">Remember Me</label>
+            </div>
+          )}
           {!isLogin && (
             <>
               <div className={styling.passbox}>

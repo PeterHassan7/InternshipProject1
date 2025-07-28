@@ -26,6 +26,8 @@ export const handleSubmit = async ({
   isLogin,
   setErrors,
   setLoading,
+  rememberMe,
+  router,
 }) => {
   e.preventDefault();
 
@@ -41,20 +43,48 @@ export const handleSubmit = async ({
     const res = await fetch(`http://localhost:5057/api/user/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password: password }),
+      body: isLogin
+        ? JSON.stringify({ username, password, RememberMe: rememberMe }) // Note casing here
+        : JSON.stringify({ username, password }),
     });
 
-    const text = await res.text();
+    const raw= await res.text();
+    // Try parse JSON, fallback to text if it fails
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = raw;
+    }
 
     if (!res.ok) {
-      toast.error(text);
-    } else {
-      toast.success(text);
+      // Show backend error message or generic fallback
+      const errorMessage =
+        typeof data === "string"
+          ? data
+          : data?.message || (isLogin ? "Login Failed" : "Signup Failed");
+      toast.error(errorMessage);
+      setLoading(false);
+      return;
     }
+
+    // Success
+    toast.success(isLogin ? "Login successful!" : "Signup Successful");
+
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+
+    if(rememberMe || isLogin){
+      localStorage.setItem("token",data.token);
+    } else{
+      sessionStorage.setItem("token",data.token);
+    }
+
+    router.push("/homepage");
   } catch (error) {
+    console.error(error);
     alert("Network error. Please try again.");
   } finally {
     setLoading(false);
   }
 };
-

@@ -159,6 +159,39 @@
   background: var(--button-primary-hover);
 }
 
+.rememberme {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 300px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: inherit;
+  user-select: none;
+}
+
+.rememberme input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--foreground); /* modern browsers */
+  border-radius: 3px;
+  border: 1px solid var(--gray-alpha-200);
+  background: var(--gray-alpha-100);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rememberme input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.rememberme label {
+  cursor: pointer;
+  user-select: none;
+}
+
+
 @media (max-width: 400px) {
   .page {
     padding: 32px;

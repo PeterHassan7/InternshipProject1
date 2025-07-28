@@ -7,8 +7,12 @@
       "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|c:\\users\\pph\\downloads\\internshipproject\\back-end\\backendproject\\backendproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|c:\\users\\pph\\downloads\\internshipproject\\back-end\\backendproject\\backendproject\\models\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\models\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|c:\\users\\pph\\downloads\\internshipproject\\back-end\\backendproject\\backendproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C53FBBC-25AB-4C7C-9EF7-9435BAA7E6AE}|BackendProject\\BackendProject.csproj|solutionrelative:backendproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,8 +22,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginRequest.cs",
+              "DocumentMoniker": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\LoginRequest.cs",
+              "RelativeDocumentMoniker": "BackendProject\\Models\\LoginRequest.cs",
+              "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\LoginRequest.cs",
+              "RelativeToolTip": "BackendProject\\Models\\LoginRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T13:30:11.688Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,22 +45,22 @@
               "RelativeDocumentMoniker": "BackendProject\\Controllers\\UserController.cs",
               "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Controllers\\UserController.cs",
               "RelativeToolTip": "BackendProject\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAowB8AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-24T08:43:09.214Z",
+              "WhenOpened": "2025-07-26T21:01:43.255Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\User.cs",
-              "RelativeDocumentMoniker": "BackendProject\\Models\\User.cs",
-              "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Models\\User.cs",
-              "RelativeToolTip": "BackendProject\\Models\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAXAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Program.cs",
+              "RelativeDocumentMoniker": "BackendProject\\Program.cs",
+              "ToolTip": "C:\\Users\\pph\\Downloads\\InternshipProject\\back-end\\BackendProject\\BackendProject\\Program.cs",
+              "RelativeToolTip": "BackendProject\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-24T08:17:48.163Z"
+              "WhenOpened": "2025-07-26T21:01:17.491Z"
             }
           ]
         }
