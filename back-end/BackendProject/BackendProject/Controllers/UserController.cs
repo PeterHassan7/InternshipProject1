@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
+using System.Collections.Concurrent;
 
 namespace BackendProject.Controllers
 {
@@ -17,6 +19,8 @@ namespace BackendProject.Controllers
         private readonly AppDBContext _context;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _configuration;
+
+        private static ConcurrentDictionary<string, string> RefreshTokens = new();
 
         public UserController(AppDBContext context, IConfiguration configuration)
         {
@@ -36,67 +40,161 @@ namespace BackendProject.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid username or password.");
 
-            // Generate JWT token
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
-
             var tokenHandler = new JwtSecurityTokenHandler();
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-            new Claim(ClaimTypes.Name, user.username)
-        }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.username) }),
                 Expires = login.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(1),
                 Issuer = "https://localhost:5057",
                 Audience = "https://localhost:5057",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            var accessToken = tokenHandler.CreateToken(tokenDescriptor);
+            var jwtToken = tokenHandler.WriteToken(accessToken);
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = tokenHandler.WriteToken(token);
+            var refreshToken = GenerateRefreshToken();
 
-            // Return the token as JSON
-            return Ok(new { token = jwtToken });
+            RefreshTokens.AddOrUpdate(user.username, refreshToken, (k, v) => refreshToken);
+
+            return Ok(new
+            {
+                token = jwtToken,
+                refreshToken = refreshToken
+            });
         }
-
 
         [HttpPost("register")]
         public IActionResult Register([FromBody] User newUser)
         {
-            // Check if username already exists
             var existing = _context.Users.FirstOrDefault(u => u.username == newUser.username);
             if (existing != null)
                 return BadRequest("Username already exists.");
 
-            // Hash the password and set creation time
             newUser.password = _passwordHasher.HashPassword(newUser, newUser.password);
             newUser.CreatedAt = DateTime.UtcNow;
 
-            // Add and save user
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            // Generate JWT token (same way as in Login)
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] {
-            new Claim(ClaimTypes.Name, newUser.username)
-        }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, newUser.username) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = "https://localhost:5057",
                 Audience = "https://localhost:5057",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = tokenHandler.WriteToken(token);
 
-            // Return JSON with the token for frontend to store
             return Ok(new { token = jwtToken });
         }
 
+        [HttpPost("refresh-token")]
+        public IActionResult RefreshToken([FromBody] TokenApiModel tokenApiModel)
+        {
+            if (tokenApiModel is null)
+                return BadRequest("Invalid request");
+
+            var accessToken = tokenApiModel.AccessToken;
+            var refreshToken = tokenApiModel.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+                return BadRequest("Invalid access token or refresh token");
+
+            var username = principal.Identity.Name;
+
+            if (!RefreshTokens.TryGetValue(username, out var savedRefreshToken) || savedRefreshToken != refreshToken)
+                return BadRequest("Invalid refresh token");
+
+            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var newTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, username) }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                Issuer = "https://localhost:5057",
+                Audience = "https://localhost:5057",
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var newAccessToken = tokenHandler.CreateToken(newTokenDescriptor);
+            var newJwtToken = tokenHandler.WriteToken(newAccessToken);
+
+            var newRefreshToken = GenerateRefreshToken();
+
+            RefreshTokens[username] = newRefreshToken;
+
+            return Ok(new
+            {
+                token = newJwtToken,
+                refreshToken = newRefreshToken
+            });
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] TokenApiModel tokenApiModel)
+        {
+            if (tokenApiModel is null)
+                return BadRequest("Invalid request");
+
+            var principal = GetPrincipalFromExpiredToken(tokenApiModel.AccessToken);
+            if (principal == null)
+                return BadRequest("Invalid token");
+
+            var username = principal.Identity.Name;
+
+            RefreshTokens.TryRemove(username, out _);
+
+            return Ok("Logged out successfully");
+        }
+        private string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidIssuer = "https://localhost:5057",
+                ValidAudience = "https://localhost:5057",
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+                if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return null;
+                }
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
+    public class TokenApiModel
+    {
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

@@ -20,7 +20,7 @@ export default function Homeredirect() {
           sessionStorage.removeItem("token");
           router.replace("/auth");
         } else {
-          router.replace("/homepage");
+          router.replace("/dashboard");
         }
       } catch (err) {
         localStorage.removeItem("token");

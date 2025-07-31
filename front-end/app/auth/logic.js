@@ -18,6 +18,50 @@ export const handleCapsKey = (e, setCapsLockon) => {
   setCapsLockon(caps);
 };
 
+export const fetchWithRefresh = async (url, options = {}) => {
+  const getStorage = () =>
+    localStorage.getItem("token") ? localStorage : sessionStorage;
+
+  let storage = getStorage();
+  let token = storage.getItem("token");
+
+  const makeRequest = async () => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  let response = await makeRequest();
+
+  if (response.status === 401) {
+    const refreshToken = storage.getItem("refreshToken");
+    if (!refreshToken) return response;
+
+    const refreshRes = await fetch("http://localhost:5057/api/user/refresh-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!refreshRes.ok) return response;
+
+    const { token: newToken } = await refreshRes.json();
+
+    storage.setItem("token", newToken);
+    token = newToken;
+
+    response = await makeRequest();
+  }
+
+  return response;
+};
+
+
 export const handleSubmit = async ({
   e,
   username,
@@ -48,7 +92,7 @@ export const handleSubmit = async ({
         : JSON.stringify({ username, password }),
     });
 
-    const raw= await res.text();
+    const raw = await res.text();
     let data;
     try {
       data = JSON.parse(raw);
@@ -69,15 +113,19 @@ export const handleSubmit = async ({
     toast.success(isLogin ? "Login successful!" : "Signup Successful");
 
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("refreshToken");
 
-    if(rememberMe || isLogin){
-      localStorage.setItem("token",data.token);
-    } else{
-      sessionStorage.setItem("token",data.token);
+    if (rememberMe) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("refreshToken", data.refreshToken);
+    } else {
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("refreshToken", data.refreshToken);
     }
 
-    router.push("/homepage");
+    router.push("/dashboard");
   } catch (error) {
     console.error(error);
     alert("Network error. Please try again.");

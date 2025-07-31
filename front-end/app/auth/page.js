@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import styling from "./page.module.css";
 import { handleSubmit, handleCapsKey } from "./logic";
 import { Toaster } from "react-hot-toast";
+import zxcvbn from "zxcvbn";
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
@@ -22,6 +23,7 @@ export default function AuthPage() {
   const [capslockon, setCapsLockon] = useState(false);
   const [errors, setErrors] = useState({});
   const [rememberMe , setrememberMe] = useState(false);
+  const strength = zxcvbn(password);
 
 
   function toggleMode(newMode) {
@@ -110,6 +112,24 @@ export default function AuthPage() {
             </button>
           </div>
           {errors.password && <div className={styling.error}>{errors.password}</div>}
+          {!isLogin && password && (
+       <div className={styling.strengthWrapper}>
+       <div className={styling.strengthBars}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          className={`${styling.strengthBar} ${
+            i <= strength.score ? styling[`score-${strength.score}`] : ""
+          }`}
+        />
+          ))}
+       </div>
+        <div className={`${styling.strengthText} ${styling[`score-${strength.score}`]}`}>
+          Strength: {["Very Weak", "Weak", "Fair", "Good", "Strong"][strength.score]}
+       </div>
+   </div>
+    )}
+
           {isLogin && (
             <div className={styling.rememberme}>
               <input
