@@ -39,7 +39,7 @@ export default function AuthPage() {
         <Toaster
           position="top-center"
           reverseOrder={false}
-          toastOptions={{ style: { background: "black", color: "white" } }}
+          toastOptions={{ style: { background: "hsl(var(--background))", color: "hsl(var(--foreground))" } }}
         />
         <div className={styling.togglecontainer}>
           <button

@@ -88,6 +88,29 @@ function toggleDarkMode() {
   setIsDark(prev => !prev);
 }
 
+function sortTeams(teams, sortConfig) {
+  if (!sortConfig.key) return teams;
 
-  return { username, logout , isDark , toggleDarkMode };
+  return [...teams].sort((a, b) => {
+    const valueA = a[sortConfig.key];
+    const valueB = b[sortConfig.key];
+
+    if (sortConfig.key === "modified") {
+      return sortConfig.direction === "asc"
+        ? new Date(valueA) - new Date(valueB)
+        : new Date(valueB) - new Date(valueA);
+    }
+
+    if (typeof valueA === "number") {
+      return sortConfig.direction === "asc" ? valueA - valueB : valueB - valueA;
+    }
+
+    return sortConfig.direction === "asc"
+      ? valueA.localeCompare(valueB)
+      : valueB.localeCompare(valueA);
+  });
+}
+
+
+  return { username, logout , isDark , toggleDarkMode ,sortTeams };
 }

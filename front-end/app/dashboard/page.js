@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useMemo } from "react";
 import styles from "./page.module.css";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import {
@@ -10,8 +10,15 @@ import {
   ShieldCheckIcon,
   BrainIcon,
   InstagramLogoIcon,
+  StarIcon,
+  SortAscendingIcon,
+  SortDescendingIcon,
 } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Table , TableBody , TableCell , TableHead , TableHeader , TableRow } from "@/components/ui/table";
+import { Avatar , AvatarFallback } from "@/components/ui/avatar";
+import { LineChart , Line , XAxis , YAxis , CartesianGrid , Tooltip , ResponsiveContainer } from "recharts";
+import { Pagination , PaginationContent , PaginationItem, PaginationLink , PaginationEllipsis , PaginationNext , PaginationPrevious } from "@/components/ui/pagination";
 import {
   UserCircleIcon,
   MoonIcon,
@@ -22,22 +29,101 @@ import {
   PlusIcon,
   CodeBracketIcon,
   DocumentTextIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 import { useAuthLogic } from "./logic";
+import { Switch } from "@/components/ui/switch";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import { EllipsisVerticalIcon } from "lucide-react";
 import { ArrowUpIcon , ArrowDownIcon , DotsThreeVerticalIcon,  StorefrontIcon,FacebookLogoIcon} from "@phosphor-icons/react";
+import { Annie_Use_Your_Telescope } from "next/font/google";
 
 export default function Homepage() {
-  const { username, logout , isDark , toggleDarkMode } = useAuthLogic();
+  const { username, logout , isDark , toggleDarkMode , sortTeams } = useAuthLogic();
   const [collapsed, setCollapsed] = useState(false);
+  const [sortConfig , setSortConfig ]= useState({key: null , direction : "asc"});
+  const [enabled , setEnabled] =useState(false);
+  const [searchTerm , setSearchTerm] = useState("");
+
+  const earningsData = [
+  { month: "Jan", earnings: 75000 },
+  { month: "Feb", earnings: 22000 },
+  { month: "Mar", earnings: 45000 },
+  { month: "Apr", earnings: 18500 },
+  { month: "May", earnings: 85000 },
+  { month: "Jun", earnings: 38000 },
+  { month: "Jul", earnings: 70000 },
+  { month: "Aug", earnings: 22000 },
+  { month: "Sep", earnings: 38500 },
+  { month: "Oct", earnings: 18500 },
+  { month: "Nov", earnings: 42000 },
+  { month: "Dec", earnings: 30000 },
+];
+
+  const teamsData = [
+    {
+            name: "Product Management",
+            desc: "Product development & lifecycle",
+            rating: 5,
+            modified: "21 Oct, 2024",
+            members: ["JD", "AE", "KT", "+10"],
+          },
+          {
+            name: "Marketing Team",
+            desc: "Campaigns & market analysis",
+            rating: 3.5,
+            modified: "15 Oct, 2024",
+            members: ["G", "E"],
+          },
+          {
+            name: "HR Department",
+            desc: "Talent acquisition, employee welfare",
+            rating: 5,
+            modified: "10 Oct, 2024",
+            members: ["BA", "FS", "AD", "CA"],
+          },
+          {
+            name: "Sales Division",
+            desc: "Customer relations, sales strategy",
+            rating: 5,
+            modified: "05 Oct, 2024",
+            members: ["KL", "OM"],
+          },
+          {
+            name: "Development Team",
+            desc: "Software development",
+            rating: 4.5,
+            modified: "01 Oct, 2024",
+            members: ["RA", "CE", "RS", "+5"],
+          },
+  ]
+
+  const handleSort = (key) => {
+  setSortConfig((prev) => ({
+    key,
+    direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+  }));
+};
+
+const sortedTeams = useMemo(() => {
+  if(!sortConfig.key) return teamsData;
+  return sortTeams(teamsData , sortConfig);
+}, [teamsData,sortConfig]);
+
+const filteredTeams = useMemo(() => {
+    return sortedTeams.filter(team =>
+      team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      team.desc.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, sortedTeams]);
+
+  const totalItems=15;
+  const perPage=5;
+  const totalPages=Math.ceil(totalItems/perPage);
 
   return (
     <>
@@ -117,9 +203,7 @@ export default function Homepage() {
                 Apps
               </MenuItem>
 
-              <MenuItem className="sidething" icon={<UsersIcon size={30} className="sideicons" />}>
-                Store-Client
-              </MenuItem>
+              <SubMenu className="sidesubm" icon={<UsersIcon size={30} className="sideicons" />} label="Store - Client" />
 
               <MenuItem
                 suffix={
@@ -138,7 +222,7 @@ export default function Homepage() {
                 className="sidething"
                 icon={<GearSixIcon size={30} className="sideicons" />}
               >
-                Store-Admin
+                Store - Admin
               </MenuItem>
 
               <MenuItem
@@ -267,6 +351,8 @@ export default function Homepage() {
             </div>
             <button className={styles.viewProfileButton}>View Profile</button>
           </div>
+          <div className={styles.cardsContainer}>
+          <div className={styles.leftCards}>
           <div className={styles.cardGrid}>
   <Card className={styles.card}>
     <CardContent className={styles.cardContent}>
@@ -388,10 +474,242 @@ export default function Homepage() {
     <div className={styles.meetingDescription}>
       Team meeting to discuss strategies, outline project milestones, define key goals and establish clear timelines.
     </div>
+<div className={styles.infoBox}>
+        <div className={styles.infoLabels}>
+          <div className={styles.infoLabel}>
+            <MapPinIcon className={styles.icon} />
+            <span>Location</span>
+          </div>
+          <div className={styles.infoLabel}>
+            <UsersIcon className={styles.icon} />
+            <span>Team</span>
+          </div>
+        </div>
 
+        <div className={styles.infoValues}>
+          <div className={styles.location}>Amsterdam</div>
+          <div className={styles.meetingAvatars}>
+            {["AL", "CR", "NM", "SK"].map((initial, idx) => (
+              <Avatar key={idx} className={styles.meetingAvatar}>
+                <AvatarFallback>{initial}</AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
+        </div>
+      </div>
     <button className={styles.joinButton}>Join Meeting</button>
   </CardContent>
 </Card>
+</div>
+<div className={styles.rightCards}>
+   <Card className={styles.keencard}>
+      <CardContent>
+  <div className={styles.keenCardContent}>
+    <div className={styles.keenAvatars}>
+    {["AL", "CR", "NM", "SK"].map((initial, idx) => (
+      <Avatar key={idx} className={styles.keenAvatar}>
+        <AvatarFallback>{initial}</AvatarFallback>
+      </Avatar>
+    ))}
+  </div>
+    <h2>
+      Connect Today & Join the <span className={styles.keenthemesHighlight}>KeenThemes</span> Network
+    </h2>
+    <p>
+      Enhance your projects with premium themes and templates. Join the KeenThemes community today for top-quality designs and resources.
+    </p>
+  </div>
+  <div className={styles.getStartedWrapper}>
+    <button className={styles.getStartedButton}>Get Started</button>
+  </div>
+</CardContent>
+
+    </Card>
+    <Card className={styles.chartCard}>
+      <CardContent>
+        <div className={styles.earningContainer}>
+          <div className={styles.chartCardHeader}>
+          <h2 className={styles.earningsTitle}>Earnings</h2>
+          <div className={styles.chartHeaderRight}>
+            <Switch></Switch>
+            <label>Referrals Only</label>
+          </div>
+          </div>
+          <ResponsiveContainer width="100%" height={250}>
+        <LineChart
+          data={earningsData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis
+            ticks={[0, 20000, 40000, 60000, 80000, 100000]}
+            domain={[0, 100000]}
+            tickFormatter={(v) => `$${v / 1000}k`}
+          />
+          <Tooltip
+          formatter={(v) => `$${v.toLocaleString()}`}
+          labelFormatter={(label) => `Month: ${label}`}
+          />
+          <Line
+            type="monotone"
+            dataKey="earnings"
+            stroke="#4f46e5"
+            strokeWidth={3}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
+    <Card className={styles.card}>
+  <CardContent className={styles.cardContent}>
+    <div className={styles.headerwithSearch}>
+    <h2 className={styles.heading}>Teams</h2>
+  
+    <div className={styles.searchContainer}>
+      <MagnifyingGlassIcon className={styles.searchIcon}/>
+      <input
+      type="text"
+      placeholder="Search Teams"
+      className={styles.searchInput}
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+    </div>
+
+    <Table className={styles.table}>
+  <TableHeader className={styles.tableHeader}>
+    <TableRow className={styles.tableRow}>
+      <TableHead className={styles.tableHead}>
+        <input type="checkbox" className={styles.checkboxCell} />
+      </TableHead>
+       <TableHead
+        className={styles.tableHeadTeam}
+        style={{ cursor: "pointer" }}
+        onClick={() => handleSort("name")}
+      >
+        <div className={styles.sortableHeader}>
+        Team{" "}
+        {sortConfig.key === "name" &&
+          (sortConfig.direction === "asc" ? (
+            <SortAscendingIcon size={16} />
+          ) : (
+            <SortDescendingIcon size={16} />
+          ))}
+          </div>
+      </TableHead>
+      <TableHead
+        className={styles.tableHead}
+        style={{ cursor: "pointer" }}
+        onClick={() => handleSort("rating")}
+      >
+        <div className={styles.sortableHeader}>
+        Rating{" "}
+        {sortConfig.key === "rating" &&
+          (sortConfig.direction === "asc" ? (
+            <SortAscendingIcon size={16} />
+          ) : (
+            <SortDescendingIcon size={16} />
+          ))}
+          </div>
+      </TableHead>
+      <TableHead
+        className={styles.tableHead}
+        style={{ cursor: "pointer" }}
+        onClick={() => handleSort("modified")}
+      >
+        <div className={styles.sortableHeader}>
+        Last Modified{" "}
+        {sortConfig.key === "modified" &&
+          (sortConfig.direction === "asc" ? (
+            <SortAscendingIcon size={16} />
+          ) : (
+            <SortDescendingIcon size={16} />
+          ))}
+          </div>
+      </TableHead>
+      <TableHead className={styles.tableHead}>Members</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody className={styles.tableBody}>
+    {sortedTeams.map((team, i) => (
+      <TableRow key={i} className={styles.tableRow}>
+        <TableCell className={styles.checkboxCell}>
+          <input type="checkbox" className={styles.checkbox} />
+        </TableCell>
+        <TableCell className={styles.tableCell}>
+          <div className={styles.teamName}>{team.name}</div>
+          <div className={styles.teamDesc}>{team.desc}</div>
+        </TableCell>
+        <TableCell className={styles.tableCell}>
+          <div className={styles.rating}>
+  {[...Array(Math.floor(team.rating))].map((_, idx) => (
+    <StarIcon key={idx} className={styles.starIcon} />
+  ))}
+
+  {team.rating % 1 >= 0.5 && (
+    <div className={styles.halfStar} key="half">
+      <StarIcon className={styles.starIcon} />
+    </div>
+  )}
+</div>
+
+        </TableCell>
+        <TableCell className={styles.tableCell}>{team.modified}</TableCell>
+        <TableCell className={styles.tableCell}>
+          <div className={styles.avatarGroup}>
+            {team.members.map((initial, idx) => (
+              <Avatar key={idx} className={styles.avatar}>
+                <AvatarFallback className={styles.avatarFallback}>
+                  {initial}
+                </AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+
+
+    {/* Pagination container */}
+    <div className={styles.paginationContainer}>
+  <div className={styles.paginationInfo}>1–5 of {totalItems}</div>
+  <Pagination>
+    <PaginationContent className={styles.paginationContent}>
+      <PaginationItem>
+        <PaginationPrevious href="#" className={styles.prevNextButton}/>
+      </PaginationItem>
+      {[...Array(totalPages)].map((_, idx) => {
+        const page = idx + 1;
+        return (
+          <PaginationItem key={page}>
+            <PaginationLink href="#" className={styles.paginationLink}>
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      })}
+      {totalPages > 3 && (
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+      )}
+      <PaginationItem>
+        <PaginationNext href="#" className={styles.prevNextButton}/>
+      </PaginationItem>
+    </PaginationContent>
+  </Pagination>
+</div>
+  </CardContent>
+</Card>
+</div>
+</div>
 
         </div>
       </div>
