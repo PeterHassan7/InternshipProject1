@@ -362,7 +362,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 1.125rem;
 }
 
@@ -710,7 +710,7 @@ html, body {
 }
 
 .keenthemesHighlight {
-  color: #007bff; /* KeenThemes blue */
+  color: #007bff;
 }
 
 .keenCardContent p {
@@ -739,9 +739,9 @@ html, body {
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  background-color: #2563eb;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
   color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
   transition: background 0.3s ease;
   text-decoration-line: underline;
   text-underline-offset: 6.5px;
@@ -749,12 +749,13 @@ html, body {
 }
 
 .getStartedButton:hover {
-  background-color: #1d4ed8;
+  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
 }
 
 
 .heading {
-  margin: 25px;
+  margin: 5px;
+  font-weight: bold;
 }
 
 .chartCard {
@@ -784,7 +785,7 @@ html, body {
 .chartHeaderRight {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 
@@ -810,7 +811,80 @@ html, body {
   user-select: none;
 }
 
-/* Table styles */
+.selectTrigger {
+  width: 140px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(150, 150, 150, 0.3);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.selectTrigger:hover,
+.selectTrigger:focus {
+  border-color: hsl(var(--button-primary-hover));
+  outline: none;
+  background-color: rgba(150, 150, 150, 0.05);
+}
+
+.SelectContent {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  padding: 0.25rem 0;
+  animation: fadeInScale 0.15s ease forwards;
+  min-width: 140px;
+  z-index: 100;
+}
+
+.selectItem {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.selectItem:hover,
+.selectItem[aria-selected="true"] {
+  background-color: rgba(150, 150, 150, 0.15);
+  color: hsl(var(--foreground));
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+.teamsCard {
+  position: relative;
+  background-color: hsl(var(--background));
+  border-radius: 12px;
+  border: 1px solid rgba(150, 150, 150, 0.3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  color: hsl(var(--foreground));
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  padding: 1rem 1.5rem;
+  height: 27rem;
+  overflow: hidden;
+}
+
 .table {
   width: 100%;
   border-collapse: separate;
@@ -818,7 +892,7 @@ html, body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   margin-top: 5px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   border: 1px solid rgba(150,150,150,0.3);
   border-radius: 12px;
   overflow: hidden;
@@ -953,7 +1027,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-right: 2.5rem;
+  margin-right: 1.5rem;
   gap: 1rem;
 }
 
@@ -985,9 +1059,6 @@ html, body {
   background-color: transparent;
 }
 
-
-
-/* Pagination container */
 .paginationContainer {
   position: absolute;
   bottom: 0.5rem;

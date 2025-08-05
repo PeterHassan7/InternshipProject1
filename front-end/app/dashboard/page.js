@@ -32,7 +32,8 @@ import {
   MapPinIcon,
 } from "@heroicons/react/24/outline";
 import { useAuthLogic } from "./logic";
-import { Switch } from "@/components/ui/switch";
+import Switch from "react-switch";
+import { Select , SelectTrigger , SelectValue , SelectContent , SelectItem } from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -40,13 +41,11 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpIcon , ArrowDownIcon , DotsThreeVerticalIcon,  StorefrontIcon,FacebookLogoIcon} from "@phosphor-icons/react";
-import { Annie_Use_Your_Telescope } from "next/font/google";
-
 export default function Homepage() {
   const { username, logout , isDark , toggleDarkMode , sortTeams } = useAuthLogic();
   const [collapsed, setCollapsed] = useState(false);
   const [sortConfig , setSortConfig ]= useState({key: null , direction : "asc"});
-  const [enabled , setEnabled] =useState(false);
+  const [checked , setChecked] =useState(false);
   const [searchTerm , setSearchTerm] = useState("");
 
   const earningsData = [
@@ -124,6 +123,25 @@ const filteredTeams = useMemo(() => {
   const totalItems=15;
   const perPage=5;
   const totalPages=Math.ceil(totalItems/perPage);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div style={{ 
+     backgroundColor: 'hsl(0, 0%, 12%)',
+     border: '1px solid hsl(0, 0%, 30%)',
+     borderRadius: 5,
+     padding: 10,
+     opacity: 0.95,
+     color: 'hsl(0, 0%, 98%)'
+    }}>
+      <p>{`Month: ${label}`}</p>
+      <p>{`$${payload[0].value.toLocaleString()}`}</p>
+    </div>
+  );
+};
+
 
   return (
     <>
@@ -468,7 +486,7 @@ const filteredTeams = useMemo(() => {
      <div className={styles.meetingTime}>09:00 - 09:30</div>
   </div>
   <div className={styles.meetingIcon}>
-    <img src="https://www.svgrepo.com/show/452140/zoom.svg" alt="App" />
+    <img src="https://www.svgrepo.com/show/452140/zoom.svg" alt="Zoom App" />
   </div>
 </div>
     <div className={styles.meetingDescription}>
@@ -531,8 +549,23 @@ const filteredTeams = useMemo(() => {
           <div className={styles.chartCardHeader}>
           <h2 className={styles.earningsTitle}>Earnings</h2>
           <div className={styles.chartHeaderRight}>
-            <Switch></Switch>
+            <Switch 
+            checked={checked} 
+            onChange={setChecked}
+            height={20}
+            width={40}
+            />
             <label>Referrals Only</label>
+            <Select className={styles.selectMenu}>
+      <SelectTrigger className={styles.selectTrigger}>
+        <SelectValue placeholder="Select period" />
+      </SelectTrigger>
+      <SelectContent className={styles.SelectContent}>
+        <SelectItem className={styles.selectItem} value="week">This Week</SelectItem>
+        <SelectItem className={styles.selectItem} value="month">This Month</SelectItem>
+        <SelectItem className={styles.selectItem} value="year">This Year</SelectItem>
+      </SelectContent>
+    </Select>
           </div>
           </div>
           <ResponsiveContainer width="100%" height={250}>
@@ -547,9 +580,8 @@ const filteredTeams = useMemo(() => {
             domain={[0, 100000]}
             tickFormatter={(v) => `$${v / 1000}k`}
           />
-          <Tooltip
-          formatter={(v) => `$${v.toLocaleString()}`}
-          labelFormatter={(label) => `Month: ${label}`}
+          <Tooltip 
+          content={<CustomTooltip />}
           />
           <Line
             type="monotone"
@@ -564,7 +596,7 @@ const filteredTeams = useMemo(() => {
         </div>
       </CardContent>
     </Card>
-    <Card className={styles.card}>
+    <Card className={styles.teamsCard}>
   <CardContent className={styles.cardContent}>
     <div className={styles.headerwithSearch}>
     <h2 className={styles.heading}>Teams</h2>
@@ -675,9 +707,6 @@ const filteredTeams = useMemo(() => {
     ))}
   </TableBody>
 </Table>
-
-
-    {/* Pagination container */}
     <div className={styles.paginationContainer}>
   <div className={styles.paginationInfo}>1–5 of {totalItems}</div>
   <Pagination>
